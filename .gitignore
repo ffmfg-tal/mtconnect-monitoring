@@ -1,0 +1,37 @@
+# Node / CF Worker
+node_modules/
+.wrangler/
+dist/
+.dev.vars
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.db
+*.db-shm
+*.db-wal
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pem
+*.key
+.secrets/
+.env
+.env.*
+!.env.example
+
+# Ansible
+*.retry
+ansible/vault_pass
