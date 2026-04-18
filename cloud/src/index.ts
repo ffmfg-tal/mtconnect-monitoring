@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import type { Env } from "./types";
 import { requireEdgeSecret } from "./auth";
 import { stateIngest } from "./ingest/state";
+import { eventsIngest } from "./ingest/events";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -10,6 +11,7 @@ app.get("/health", (c) => c.json({ ok: true, service: "mtconnect-collector" }));
 const ingest = new Hono<{ Bindings: Env }>();
 ingest.use("*", requireEdgeSecret);
 ingest.route("/state", stateIngest);
+ingest.route("/events", eventsIngest);
 app.route("/ingest", ingest);
 
 export default {
