@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mtconnect-collector",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mtconnect",
+      "database_id": "REPLACE_AT_DEPLOY"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/1 * * * *",
+      "5 7 * * *"
+    ]
+  },
+  "env": {
+    "staging": {
+      "name": "mtconnect-collector-staging",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "mtconnect-staging",
+          "database_id": "REPLACE_AT_DEPLOY"
+        }
+      ]
+    }
+  }
+}
