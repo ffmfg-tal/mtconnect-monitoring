@@ -6,6 +6,7 @@ import { eventsIngest } from "./ingest/events";
 import { rollupsIngest } from "./ingest/rollups";
 import { machinesRead } from "./read/machines";
 import { oeeRead } from "./read/oee";
+import { alertsRead } from "./read/alerts";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -20,6 +21,7 @@ app.route("/ingest", ingest);
 
 app.route("/machines", machinesRead);
 app.route("/machines", oeeRead);
+app.route("/alerts", alertsRead);
 
 export default {
   fetch: app.fetch,
