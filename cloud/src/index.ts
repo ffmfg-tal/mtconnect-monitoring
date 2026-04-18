@@ -3,6 +3,7 @@ import type { Env } from "./types";
 import { requireEdgeSecret } from "./auth";
 import { stateIngest } from "./ingest/state";
 import { eventsIngest } from "./ingest/events";
+import { rollupsIngest } from "./ingest/rollups";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -12,6 +13,7 @@ const ingest = new Hono<{ Bindings: Env }>();
 ingest.use("*", requireEdgeSecret);
 ingest.route("/state", stateIngest);
 ingest.route("/events", eventsIngest);
+ingest.route("/rollups", rollupsIngest);
 app.route("/ingest", ingest);
 
 export default {
