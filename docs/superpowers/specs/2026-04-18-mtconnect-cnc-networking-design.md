@@ -79,6 +79,13 @@ SHOP FLOOR                                   CLOUDFLARE
 
 **Edge box** — one Linux NUC (Intel i5, 16GB RAM, 512GB NVMe, wired Ethernet) on a dedicated shop-floor monitoring VLAN. Ubuntu LTS or AlmaLinux. Runs a podman-compose stack:
 
+**Machine network attachment — Unifi UDB-IoT per machine.** Each CNC is bridged onto the monitoring VLAN via a Unifi UDB-IoT ($45, USB-C powered, Wi-Fi → Ethernet). The bridge's uplink SSID is VLAN-tagged within the existing FFMFG Unifi stack; the machine's Ethernet port plugs into the bridge's LAN port. Benefits: no Cat6 pulls per machine (machine layouts reshuffle), bridges are first-class managed clients in Unifi, VLAN isolation is enforced at the SSID, and the CMMC egress allowlist (§8) lives on the Unifi firewall where other egress policy already does.
+
+Known caveats, designed for:
+- **RF environment.** CNC floors are EMI-noisy (VFDs, servo drives). Phase A's single-Haas bring-up doubles as the RF smoke test; reassess signal quality before buying bridges for the full fleet.
+- **Power.** USB-C from the machine's control cabinet is the current hack. In the planned new facility each machine gets dedicated 120V + a small per-machine rack (computer, monitor, bridge, andon) so the bridge has a power feed independent of the machine itself. Until then, a machine powered off reports as `OFFLINE` — which is the correct semantics, not a bug.
+
+
 - **Adapter processes** (one per non-native machine): Python 3.12+ services speaking SHDR on localhost to cppagent. Per-controller-kind implementations:
   - `siemens-opcua-adapter` (Phase C) — asyncua client polling Sinumerik OPC UA nodes.
   - `okuma-thinc-adapter` (fallback only, Phase B) — if Okuma App Suite MTConnect is unavailable.
@@ -394,7 +401,9 @@ When DNC is added, the following additional controls kick in on the same box:
 | Verify Sinumerik OPC UA Server option licensed on both DVF 5000s | Controls tech | Blocks Phase C start |
 | Verify Okuma App Suite MTConnect adapter licensed | Controls tech / Okuma rep | Blocks Phase B Okuma step (fallback exists) |
 | Procure edge NUC hardware | Tyler | Blocks Phase A |
-| Shop-floor monitoring VLAN provisioned | IT | Blocks Phase A |
+| Shop-floor monitoring VLAN + Unifi SSID provisioned on existing Unifi stack | IT | Blocks Phase A |
+| Unifi UDB-IoT bridges ordered (1 per priority-fleet machine) | Tyler | Blocks Phase A bring-up of first Haas |
+| Per-machine rack design (computer, monitor, bridge, andon, dedicated 120V) for new facility | Tyler / facilities | Non-blocking for Phase 1; informs new-facility buildout |
 | Slack `#shop-floor-alerts` channel + bot token | Tyler | Blocks alert fan-out (MES-only delivery works without it) |
 | Decide edge-box hostname convention + cloud machine-id convention | Tyler | Non-blocking, minor |
 
@@ -412,6 +421,7 @@ When DNC is added, the following additional controls kick in on the same box:
 | MES Machines tab | Ours | Internal | Wholly ours (part of shop-floor-mes) |
 | Podman / Ansible / SQLite / Python / asyncua | Open-source | Apache-2.0 / GPL / public domain / BSD | We run our own builds |
 | Ubuntu LTS / AlmaLinux | Open-source | various | We run our own box |
+| Unifi UDB-IoT + Unifi controller stack | Third-party hardware | — | On-prem managed, no vendor telemetry dependency; consistent with existing FFMFG network posture |
 | Cloudflare Workers / D1 / Tunnel | Third-party platform | — | Same posture as existing MES; user already uses CF |
 
 Nothing in the critical telemetry path requires a third-party SaaS machine-monitoring vendor.
