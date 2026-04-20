@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MTConnectStreams xmlns="urn:mtconnect.org:MTConnectStreams:1.4">
+  <Header creationTime="2026-04-20T14:10:00Z" sender="haas-vf2-1" instanceId="1" version="1.4" bufferSize="131072" nextSequence="1600" firstSequence="1" lastSequence="1599"/>
+  <Streams>
+    <DeviceStream name="VF-2" uuid="haas-vf2-1">
+      <ComponentStream component="Controller" name="controller" componentId="cn1">
+        <Events>
+          <Execution dataItemId="exec" timestamp="2026-04-20T14:09:50Z" sequence="1590">UNAVAILABLE</Execution>
+          <Program dataItemId="prog" timestamp="2026-04-20T14:09:50Z" sequence="1591">UNAVAILABLE</Program>
+        </Events>
+      </ComponentStream>
+      <ComponentStream component="Path" name="path1" componentId="p1">
+        <Events>
+          <ToolAssetId dataItemId="tool" timestamp="2026-04-20T14:09:50Z" sequence="1592">UNAVAILABLE</ToolAssetId>
+          <PartCount dataItemId="pc" timestamp="2026-04-20T14:09:50Z" sequence="1593">UNAVAILABLE</PartCount>
+        </Events>
+      </ComponentStream>
+    </DeviceStream>
+  </Streams>
+</MTConnectStreams>
