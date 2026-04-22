@@ -33,12 +33,12 @@ More adapters welcome — see `CONTRIBUTING.md`.
 
 ## Status
 
-Early-stage. Phase A (foundation + first Haas) is in active implementation. See `docs/superpowers/plans/` for the current plan and `docs/superpowers/specs/` for the design.
+Phases 0–2 complete: cloud Worker (ingest, processor, alerts, read API) and edge forwarder are built and tested against `demo.mtconnect.org`. Phase 3 (first real Haas on the shop NUC) is next. See `docs/superpowers/plans/` for the current plan and `docs/superpowers/specs/` for the design.
 
 ## Repository layout
 
 - `cloud/` — Cloudflare Worker (ingest, read, drill-down proxy, crons)
-- `edge/collector/` — Python service running on the edge NUC
+- `edge/forwarder/` — Python async service running on the edge NUC
 - `edge/cppagent/` — cppagent configuration + per-device XML
 - `edge/compose/` — podman-compose stack definition
 - `edge/ansible/` — baseline deploy for the edge NUC (OS hardening, services)
