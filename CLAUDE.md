@@ -13,8 +13,8 @@ SaaS telemetry vendor.
 ## Tech
 
 - **Cloud** (`cloud/`): Cloudflare Workers + Hono + D1, TypeScript, vitest
-- **Edge collector** (`edge/collector/`): Python 3.12 async (httpx, aiosqlite,
-  aiohttp), pytest
+- **Edge forwarder** (`edge/forwarder/`): Python 3.12 async (httpx, aiosqlite,
+  lxml), pytest. Buffer-of-record; does not interpret MTConnect semantics.
 - **Edge infra** (`edge/cppagent/`, `edge/compose/`, `edge/ansible/`):
   cppagent (Apache-2.0), podman-compose, Ansible
 - **MES integration** lives in the sibling `shop-floor-mes/` repo
@@ -40,8 +40,11 @@ slashes). Edge deployment target is Ubuntu 24.04 LTS on an x86_64 NUC.
 - `../shop-floor-mes/` — MES that renders machine tiles and alerts
 - `../fulcrum-pro-mcp/` — MCP server pattern we reuse for auth + error shapes
 - `../contract-manufacturer-ontology/` — standards & ontology; fix DVF
-  Siemens vs. Mazak misidentification during Phase C
+  Siemens vs. Mazak misidentification during Phase 5
 
 ## Design doc
 
-`docs/superpowers/specs/2026-04-18-mtconnect-cnc-networking-design.md`
+`docs/superpowers/specs/2026-04-22-mtconnect-v2-redesign.md`
+
+Phase plans live in `docs/superpowers/plans/`. v1 implementation is archived
+on the `v1-archive` git branch.

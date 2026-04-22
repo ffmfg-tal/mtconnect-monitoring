@@ -13,10 +13,7 @@
     }
   ],
   "triggers": {
-    "crons": [
-      "*/1 * * * *",
-      "5 7 * * *"
-    ]
+    "crons": []
   },
   "env": {
     "staging": {

@@ -1,10 +1,7 @@
-import { defineWorkersConfig, readD1Migrations } from "@cloudflare/vitest-pool-workers/config";
-
-const migrations = await readD1Migrations("./migrations");
+import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
 
 export default defineWorkersConfig({
   test: {
-    setupFiles: ["./test/apply-migrations.ts"],
     poolOptions: {
       workers: {
         singleWorker: true,
@@ -15,7 +12,6 @@ export default defineWorkersConfig({
           bindings: {
             EDGE_SHARED_SECRET: "test-secret",
             EDGE_TUNNEL_HOSTNAME: "edge.example.internal",
-            TEST_MIGRATIONS: migrations,
           },
         },
       },
