@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MTConnectDevices xmlns="urn:mtconnect.org:MTConnectDevices:2.7"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="urn:mtconnect.org:MTConnectDevices:2.7 http://schemas.mtconnect.org/schemas/MTConnectDevices_2.7.xsd">
+  <Header creationTime="2026-04-22T10:00:00Z" sender="localhost" instanceId="1" bufferSize="131072" version="2.7"/>
+  <Devices>
+    <Device id="Mazak01" name="Mazak01" uuid="000-mazak-01">
+      <Description manufacturer="Mazak" model="Integrex"/>
+      <DataItems>
+        <DataItem category="EVENT" id="avail" type="AVAILABILITY"/>
+      </DataItems>
+      <Components>
+        <Controller id="ctrl" name="controller">
+          <DataItems>
+            <DataItem category="EVENT" id="mode" type="CONTROLLER_MODE"/>
+            <DataItem category="EVENT" id="estop" type="EMERGENCY_STOP"/>
+          </DataItems>
+          <Components>
+            <Path id="path" name="path">
+              <DataItems>
+                <DataItem category="EVENT" id="exec" type="EXECUTION"/>
+                <DataItem category="EVENT" id="prog" type="PROGRAM"/>
+                <DataItem category="EVENT" id="tool" type="TOOL_NUMBER"/>
+                <DataItem category="EVENT" id="part" type="PART_COUNT" subType="ALL"/>
+                <DataItem category="SAMPLE" id="feed" type="PATH_FEEDRATE" units="MILLIMETER/SECOND"/>
+                <DataItem category="CONDITION" id="logic_cond" type="LOGIC_PROGRAM"/>
+                <DataItem category="CONDITION" id="motion_cond" type="MOTION_PROGRAM"/>
+                <DataItem category="CONDITION" id="system_cond" type="SYSTEM"/>
+              </DataItems>
+            </Path>
+          </Components>
+        </Controller>
+        <Axes id="axes" name="base">
+          <Components>
+            <Rotary id="spindle" name="C">
+              <DataItems>
+                <DataItem category="SAMPLE" id="spindle_rpm" type="ROTARY_VELOCITY" units="REVOLUTION/MINUTE"/>
+                <DataItem category="SAMPLE" id="spindle_load" type="LOAD" units="PERCENT"/>
+              </DataItems>
+            </Rotary>
+          </Components>
+        </Axes>
+      </Components>
+    </Device>
+  </Devices>
+</MTConnectDevices>
