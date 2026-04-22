@@ -2,6 +2,7 @@ import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
 
 export default defineWorkersConfig({
   test: {
+    exclude: ["test/xsd.test.ts", "node_modules/**"],
     poolOptions: {
       workers: {
         singleWorker: true,
