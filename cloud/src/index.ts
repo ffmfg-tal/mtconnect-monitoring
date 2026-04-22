@@ -7,6 +7,7 @@ import { runProcessor } from "./processor/run";
 import { runAlertScanner } from "./alerts/scanner";
 import { machinesRead } from "./read/machines";
 import { utilizationRead } from "./read/utilization";
+import { alertsRead } from "./read/alerts";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -19,6 +20,7 @@ ingest.route("/observations", observationsIngest);
 app.route("/ingest", ingest);
 app.route("/machines", machinesRead);
 app.route("/machines", utilizationRead);
+app.route("/alerts", alertsRead);
 
 export default {
   fetch: app.fetch,
