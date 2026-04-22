@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "test:xsd": "vitest run -c vitest.xsd.config.ts",
     "poll:demo": "tsx scripts/demo-poller.ts",
+    "gen:golden": "tsx scripts/gen-golden.ts",
     "type-check": "tsc --noEmit",
     "db:migrate:local": "wrangler d1 migrations apply mtconnect --local",
     "db:migrate:staging": "wrangler d1 migrations apply mtconnect --env staging --remote",
