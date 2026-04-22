@@ -5,6 +5,7 @@ import { probeIngest } from "./ingest/probe";
 import { observationsIngest } from "./ingest/observations";
 import { runProcessor } from "./processor/run";
 import { runAlertScanner } from "./alerts/scanner";
+import { machinesRead } from "./read/machines";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -15,6 +16,7 @@ ingest.use("*", requireEdgeSecret);
 ingest.route("/probe", probeIngest);
 ingest.route("/observations", observationsIngest);
 app.route("/ingest", ingest);
+app.route("/machines", machinesRead);
 
 export default {
   fetch: app.fetch,
