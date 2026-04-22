@@ -1,0 +1,56 @@
+---
+- name: Sync stack files to /opt/mtconnect
+  ansible.builtin.synchronize:
+    src: "{{ playbook_dir }}/../"
+    dest: /opt/mtconnect/
+    rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=ansible"
+      - "--exclude=forwarder/tests"
+  become: true
+
+- name: Ensure stack owned by mtconnect
+  ansible.builtin.file:
+    path: /opt/mtconnect
+    owner: "{{ mtconnect_user }}"
+    group: "{{ mtconnect_user }}"
+    recurse: yes
+
+- name: Ensure .env present
+  ansible.builtin.copy:
+    dest: /opt/mtconnect/compose/.env
+    content: |
+      MTC_CLOUD_URL={{ mtc_cloud_url }}
+      MTC_EDGE_SECRET={{ mtc_edge_secret }}
+    owner: "{{ mtconnect_user }}"
+    group: "{{ mtconnect_user }}"
+    mode: "0600"
+
+- name: Deploy systemd unit to run podman-compose on boot
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/mtconnect-stack.service
+    content: |
+      [Unit]
+      Description=MTConnect edge stack (podman-compose)
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      Type=simple
+      User={{ mtconnect_user }}
+      WorkingDirectory=/opt/mtconnect/compose
+      ExecStart=/usr/bin/podman-compose up
+      ExecStop=/usr/bin/podman-compose down
+      Restart=on-failure
+      RestartSec=10
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: "0644"
+  notify: reload systemd
+
+- name: Enable mtconnect-stack
+  ansible.builtin.service:
+    name: mtconnect-stack
+    state: started
+    enabled: yes

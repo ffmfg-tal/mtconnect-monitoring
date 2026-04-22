@@ -1,0 +1,80 @@
+---
+- name: Ensure essential packages
+  ansible.builtin.apt:
+    name:
+      - ufw
+      - chrony
+      - auditd
+      - unattended-upgrades
+      - apt-listchanges
+      - htop
+      - rsync
+      - curl
+      - jq
+      - fail2ban
+    state: present
+    update_cache: yes
+
+- name: Enable and start auditd
+  ansible.builtin.service:
+    name: auditd
+    state: started
+    enabled: yes
+
+- name: Enable unattended upgrades
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+      APT::Periodic::AutocleanInterval "7";
+    mode: "0644"
+
+- name: Ensure SSH password auth is off
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: restart sshd
+
+- name: Ensure SSH root login disabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: restart sshd
+
+- name: Enable chrony
+  ansible.builtin.service:
+    name: chrony
+    state: started
+    enabled: yes
+
+- name: Configure UFW baseline
+  block:
+    - ansible.builtin.command: ufw default deny incoming
+      changed_when: false
+    - ansible.builtin.command: ufw default allow outgoing
+      changed_when: false
+    - ansible.builtin.command: ufw allow 22/tcp
+      changed_when: false
+    - ansible.builtin.command: ufw --force enable
+      changed_when: false
+
+- name: Create mtconnect user
+  ansible.builtin.user:
+    name: "{{ mtconnect_user }}"
+    uid: "{{ mtconnect_uid }}"
+    shell: /usr/sbin/nologin
+    system: yes
+    create_home: no
+
+- name: Ensure subuid/subgid mappings
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    line: "{{ mtconnect_user }}:100000:65536"
+    create: yes
+    mode: "0644"
+  loop:
+    - { path: /etc/subuid }
+    - { path: /etc/subgid }

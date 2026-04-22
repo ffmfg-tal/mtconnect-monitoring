@@ -1,0 +1,13 @@
+---
+- name: MTConnect NUC baseline + stack
+  hosts: nucs
+  become: true
+  vars:
+    mtconnect_user: mtconnect
+    mtconnect_uid: 2000
+    monitoring_vlan_interface: "{{ monitoring_vlan_interface | default('') }}"
+  roles:
+    - baseline
+    - podman
+    - monitoring_vlan
+    - mtconnect_stack

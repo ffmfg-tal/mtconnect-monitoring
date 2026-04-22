@@ -1,0 +1,15 @@
+---
+- name: Install podman + compose
+  ansible.builtin.apt:
+    name:
+      - podman
+      - podman-compose
+      - slirp4netns
+      - uidmap
+    state: present
+    update_cache: yes
+
+- name: Enable lingering for mtconnect user (so rootless services persist)
+  ansible.builtin.command: "loginctl enable-linger {{ mtconnect_user }}"
+  args:
+    creates: "/var/lib/systemd/linger/{{ mtconnect_user }}"
