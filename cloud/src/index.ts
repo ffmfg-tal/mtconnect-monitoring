@@ -3,6 +3,7 @@ import type { Env } from "./types";
 import { requireEdgeSecret } from "./auth";
 import { probeIngest } from "./ingest/probe";
 import { observationsIngest } from "./ingest/observations";
+import { runProcessor } from "./processor/run";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -17,10 +18,12 @@ app.route("/ingest", ingest);
 export default {
   fetch: app.fetch,
   async scheduled(
-    _controller: ScheduledController,
-    _env: Env,
+    controller: ScheduledController,
+    env: Env,
     _ctx: ExecutionContext,
   ) {
-    // cron handlers wired in later tasks
+    if (controller.cron === "*/1 * * * *") {
+      await runProcessor(env);
+    }
   },
 } satisfies ExportedHandler<Env>;

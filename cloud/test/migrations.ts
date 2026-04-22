@@ -5,10 +5,13 @@
 import type { Env } from "../src/types";
 // @ts-expect-error — vite ?raw import returns string
 import sql0001 from "../migrations/0001_v2_init.sql?raw";
+// @ts-expect-error — vite ?raw import returns string
+import sql0002 from "../migrations/0002_processor_cursor_state.sql?raw";
 
 // Ordered list of migration contents. Add new migrations to the end.
 const MIGRATIONS: Array<{ name: string; sql: string }> = [
   { name: "0001_v2_init.sql", sql: sql0001 as string },
+  { name: "0002_processor_cursor_state.sql", sql: sql0002 as string },
 ];
 
 export async function applyMigrations(env: Env): Promise<void> {
