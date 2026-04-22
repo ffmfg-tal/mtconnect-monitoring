@@ -97,7 +97,7 @@ async function scanDevice(
   )
     .bind(deviceUuid)
     .all<{ id: number; kind: string }>();
-  const firingKinds = new Set(alerts.map((a) => a.kind));
+  const firingKinds: Set<string> = new Set(alerts.map((a) => a.kind));
   for (const oa of openAlerts.results) {
     if (!firingKinds.has(oa.kind)) {
       await env.DB.prepare("UPDATE alerts SET cleared_at = ? WHERE id = ?")

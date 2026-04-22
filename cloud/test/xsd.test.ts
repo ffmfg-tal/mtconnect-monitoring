@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-// @ts-expect-error - libxmljs2 has no types
 import libxml from "libxmljs2";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -16,7 +16,9 @@ alertsRead.post("/:id/ack", async (c) => {
   const id = Number(c.req.param("id"));
   if (!Number.isFinite(id)) return c.json({ error: "bad id" }, 400);
   const body =
-    (await c.req.json<{ acknowledged_by?: string }>().catch(() => ({}))) ?? {};
+    (await c.req
+      .json<{ acknowledged_by?: string }>()
+      .catch(() => ({}) as { acknowledged_by?: string })) ?? {};
   const by = body.acknowledged_by ?? "unknown";
   const now = new Date().toISOString();
   const res = await c.env.DB.prepare(
