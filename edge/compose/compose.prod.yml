@@ -1,0 +1,38 @@
+# Production stack — no simulator.
+# cppagent connects directly to machine adapters on the monitoring VLAN.
+# MTC_CLOUD_URL and MTC_EDGE_SECRET are written to .env by the Ansible mtconnect_stack role.
+version: "3.9"
+
+services:
+  cppagent:
+    image: mtconnect/agent:2.7
+    volumes:
+      - ../cppagent:/mtconnect/config:ro
+    ports:
+      - "127.0.0.1:5000:5000"
+    networks: [mtc]
+    restart: unless-stopped
+
+  forwarder:
+    build:
+      context: ../forwarder
+    depends_on: [cppagent]
+    environment:
+      MTC_AGENT_URL: http://cppagent:5000
+      MTC_CLOUD_URL: ${MTC_CLOUD_URL:?set MTC_CLOUD_URL in .env}
+      MTC_EDGE_SECRET: ${MTC_EDGE_SECRET:?set MTC_EDGE_SECRET in .env}
+      MTC_BUFFER_PATH: /var/lib/mtconnect/forwarder.sqlite
+      MTC_POLL_INTERVAL_S: "1.0"
+      MTC_FORWARD_INTERVAL_S: "1.0"
+      MTC_FORWARD_BATCH: "500"
+    volumes:
+      - forwarder-data:/var/lib/mtconnect
+    networks: [mtc]
+    restart: unless-stopped
+
+networks:
+  mtc:
+    driver: bridge
+
+volumes:
+  forwarder-data:

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Haas VF-2 NGC device template.
+  Adapter speaks SHDR on port 7878 (native MTConnect, Setting 143 = 1).
+  DataItem id prefix matches the Device uuid prefix so multi-device cppagent stays collision-free.
+  To add a second Haas: copy this file, change uuid + all id attributes, add Adapters block in agent.cfg.
+-->
+<MTConnectDevices xmlns="urn:mtconnect.org:MTConnectDevices:2.7"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="urn:mtconnect.org:MTConnectDevices:2.7 http://schemas.mtconnect.org/schemas/MTConnectDevices_2.7.xsd">
+  <Header creationTime="2026-04-22T00:00:00Z" sender="localhost"
+          instanceId="1" bufferSize="131072" version="2.7"/>
+  <Devices>
+    <Device id="haas01" name="Haas01" uuid="HAAS-VF2-001">
+      <Description manufacturer="Haas Automation" model="VF-2" serialNumber=""/>
+      <DataItems>
+        <DataItem category="EVENT" id="haas01_avail" type="AVAILABILITY"/>
+      </DataItems>
+      <Components>
+        <Controller id="haas01_ctrl" name="controller">
+          <DataItems>
+            <DataItem category="EVENT"     id="haas01_mode"   type="CONTROLLER_MODE"/>
+            <DataItem category="EVENT"     id="haas01_estop"  type="EMERGENCY_STOP"/>
+            <DataItem category="CONDITION" id="haas01_system" type="SYSTEM"/>
+            <DataItem category="CONDITION" id="haas01_logic"  type="LOGIC_PROGRAM"/>
+            <DataItem category="CONDITION" id="haas01_motion" type="MOTION_PROGRAM"/>
+          </DataItems>
+          <Components>
+            <Path id="haas01_path" name="path">
+              <DataItems>
+                <DataItem category="EVENT"  id="haas01_exec"   type="EXECUTION"/>
+                <DataItem category="EVENT"  id="haas01_prog"   type="PROGRAM"/>
+                <DataItem category="EVENT"  id="haas01_tool"   type="TOOL_NUMBER"/>
+                <DataItem category="EVENT"  id="haas01_part"   type="PART_COUNT" subType="ALL"/>
+                <DataItem category="SAMPLE" id="haas01_feed"   type="PATH_FEEDRATE" units="MILLIMETER/SECOND"/>
+                <DataItem category="SAMPLE" id="haas01_feed_o" type="PATH_FEEDRATE_OVERRIDE" units="PERCENT"/>
+              </DataItems>
+            </Path>
+          </Components>
+        </Controller>
+        <Axes id="haas01_axes" name="base">
+          <Components>
+            <Rotary id="haas01_spindle" name="C">
+              <DataItems>
+                <DataItem category="SAMPLE" id="haas01_rpm"          type="ROTARY_VELOCITY"          units="REVOLUTION/MINUTE"/>
+                <DataItem category="SAMPLE" id="haas01_spindle_load" type="LOAD"                     units="PERCENT"/>
+                <DataItem category="SAMPLE" id="haas01_spindle_o"    type="ROTARY_VELOCITY_OVERRIDE"  units="PERCENT"/>
+              </DataItems>
+            </Rotary>
+          </Components>
+        </Axes>
+      </Components>
+    </Device>
+  </Devices>
+</MTConnectDevices>

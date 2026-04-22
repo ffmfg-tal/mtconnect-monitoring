@@ -1,0 +1,21 @@
+# group_vars/nucs.yml — applies to all hosts in [nucs] inventory group.
+# Non-secret vars are committed. mtc_edge_secret is provided at deploy time:
+#   ansible-playbook ... --extra-vars "mtc_edge_secret=SECRET"
+
+compose_file: compose.prod.yml
+
+# Haas VF-2 #1 — IP assigned by Unifi DHCP to the UDB-IoT bridge on monitoring VLAN 30.
+# Update before first Ansible run (check Unifi Network → Clients).
+haas01_adapter_ip: "192.168.30.11"
+
+# Deployed Cloudflare Worker URL — fill in after `wrangler deploy` in Task 6.
+mtc_cloud_url: "https://mtconnect-collector.ACCOUNT.workers.dev"
+
+# Provided via --extra-vars or ansible-vault; never committed in plaintext.
+mtc_edge_secret: "REPLACE_VIA_EXTRA_VARS_OR_VAULT"
+
+# Monitoring VLAN interface.  Verify with `ip link show` on the NUC before running.
+# Format: PHYSICAL_NIC.VLAN_ID (e.g. enp3s0.30)
+monitoring_vlan_interface: "enp3s0.30"
+monitoring_vlan_id: 30
+monitoring_vlan_link: "enp3s0"

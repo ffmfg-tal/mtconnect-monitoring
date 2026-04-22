@@ -9,6 +9,23 @@
       - "--exclude=forwarder/tests"
   become: true
 
+- name: Template production agent.cfg
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/../cppagent/agent.prod.cfg.j2"
+    dest: /opt/mtconnect/cppagent/agent.cfg
+    owner: "{{ mtconnect_user }}"
+    group: "{{ mtconnect_user }}"
+    mode: "0644"
+
+- name: Activate production Devices.xml
+  ansible.builtin.copy:
+    src: /opt/mtconnect/cppagent/Devices.prod.xml
+    dest: /opt/mtconnect/cppagent/Devices.xml
+    owner: "{{ mtconnect_user }}"
+    group: "{{ mtconnect_user }}"
+    mode: "0644"
+    remote_src: yes
+
 - name: Ensure stack owned by mtconnect
   ansible.builtin.file:
     path: /opt/mtconnect
@@ -39,8 +56,8 @@
       Type=simple
       User={{ mtconnect_user }}
       WorkingDirectory=/opt/mtconnect/compose
-      ExecStart=/usr/bin/podman-compose up
-      ExecStop=/usr/bin/podman-compose down
+      ExecStart=/usr/bin/podman-compose -f {{ compose_file | default('compose.yml') }} up
+      ExecStop=/usr/bin/podman-compose -f {{ compose_file | default('compose.yml') }} down
       Restart=on-failure
       RestartSec=10
 

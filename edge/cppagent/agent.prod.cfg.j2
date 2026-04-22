@@ -1,0 +1,27 @@
+{# Production agent.cfg — rendered by Ansible from group_vars/nucs.yml. #}
+{# haas01_adapter_ip is the Haas's DHCP lease on the monitoring VLAN.   #}
+Devices = Devices.xml
+SchemaVersion = 2.7
+WorkerThreads = 4
+MonitorConfigFiles = yes
+Port = 5000
+ServerIp = 0.0.0.0
+JsonVersion = 2
+BufferSize = 17
+MaxAssets = 1024
+DisableAgentDevice = false
+Validation = true
+
+logger_config {
+  output = cout
+  level = warn
+}
+
+Adapters {
+  Haas01 {
+    Host = {{ haas01_adapter_ip }}
+    Port = 7878
+    Device = Haas01
+    ReconnectInterval = 10000
+  }
+}
