@@ -4,6 +4,7 @@ import { requireEdgeSecret } from "./auth";
 import { probeIngest } from "./ingest/probe";
 import { observationsIngest } from "./ingest/observations";
 import { runProcessor } from "./processor/run";
+import { runAlertScanner } from "./alerts/scanner";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -24,6 +25,7 @@ export default {
   ) {
     if (controller.cron === "*/1 * * * *") {
       await runProcessor(env);
+      await runAlertScanner(env);
     }
   },
 } satisfies ExportedHandler<Env>;
