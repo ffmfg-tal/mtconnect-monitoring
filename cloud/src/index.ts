@@ -8,6 +8,7 @@ import { runAlertScanner } from "./alerts/scanner";
 import { machinesRead } from "./read/machines";
 import { utilizationRead } from "./read/utilization";
 import { alertsRead } from "./read/alerts";
+import { computeShiftRollup } from "./shift/rollup";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -32,6 +33,12 @@ export default {
     if (controller.cron === "*/1 * * * *") {
       await runProcessor(env);
       await runAlertScanner(env);
+    } else if (controller.cron === "0 4 * * *") {
+      // 04:00 UTC ~ 22:00 MDT previous day (approx) — tune per shop
+      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10);
+      await computeShiftRollup(env, yesterday);
     }
   },
 } satisfies ExportedHandler<Env>;
